@@ -1,4 +1,5 @@
 import logging
+import random
 from abc import ABC, abstractmethod
 
 from car_park import CarPark
@@ -24,20 +25,28 @@ class Sensor(ABC):
         status = "is active" if self.is_active else "is not active"
         return f"Display {self.senor_id}, Status: the senor {status}"
 
+    def _scan_plate(self) -> str:
+        return "FAKE-" + format(random.randint(0, 999), "03d")
+
     @abstractmethod
     def update_car_park(self, plate: str) -> None:
         pass
 
-    @abstractmethod
-    def detect_car(self) -> None:
-        pass
+    def detect_vehicle(self) -> None:
+        plate = self._scan_plate()
+        self.update_car_park(plate)
 
 
 class EntrySensor(Sensor):
     def update_car_park(self, plate: str) -> None:
-        pass
+        self.car_park.add_car(plate)
+        logger.info(f"Incoming 🚘 vehicle detected. Plate: {plate}")
 
 
 class ExitSensor(Sensor):
+    def _scan_plate(self) -> str:
+        return random.choice(self.car_park.plates)
+
     def update_car_park(self, plate: str) -> None:
-        pass
+        self.car_park.remove_car(plate)
+        logger.info(f"Outgoing 🚗 vehicle detected. Plate: {plate}")
