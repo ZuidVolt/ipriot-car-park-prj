@@ -21,9 +21,9 @@ preview = true
 [tool.pyright]
 typeCheckingMode = "basic"
 pythonVersion = "3.13"
-# reportUnusedCallResult = false
-# reportAny = false
-# reportExplicitAny = false
+reportAny = false
+reportUnusedParameter = false
+reportUnreachable = false
 
 [tool.radon]
 cc = [ "-a", "-nc", "-s",]

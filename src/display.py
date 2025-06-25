@@ -8,3 +8,6 @@ class Display:
 
     def __str__(self) -> str:
         return f"Display {self.id}: {self.message}"
+
+    def update(self) -> None:
+        pass
