@@ -1,6 +1,6 @@
 import logging
 
-from display import Display
+from display import Display, DisplayData
 from sensor import Sensor
 from utils import strip_dunder
 
@@ -69,9 +69,13 @@ class CarPark:
         self.update_displays()
 
     def update_displays(self) -> None:
-        data: dict[str, str | int] = {
+        data: DisplayData = {
             "available_bays": self.available_bays,
             "temperature": 25,
         }
         for display in self.displays:
             display.update(data)
+
+
+if __name__ == "__main__":
+    pass

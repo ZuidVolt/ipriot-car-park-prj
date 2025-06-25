@@ -1,4 +1,5 @@
 import logging
+from typing import TypedDict
 
 from utils import strip_dunder
 
@@ -7,6 +8,11 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(strip_dunder(__name__))
+
+
+class DisplayData(TypedDict):
+    available_bays: int
+    temperature: float
 
 
 class Display:
@@ -20,6 +26,16 @@ class Display:
     def __str__(self) -> str:
         return f"Display {self.id}: {self.message}"
 
-    def update(self, data: dict[str, str | int]) -> None:
-        for key, value in data.items():
-            print(f"{key}: {value}")
+    def update(self, data: DisplayData) -> None:
+        for key, val in data.items():
+            display_val = round(val, 1) if isinstance(val, float) else val
+            print(f"{key}: {display_val}")
+
+
+if __name__ == "__main__":
+    display = Display(1, "Welcome to the Car Park", is_on=True)
+    print(display)
+    display.update({
+        "available_bays": 10,
+        "temperature": 22.55,
+    })
