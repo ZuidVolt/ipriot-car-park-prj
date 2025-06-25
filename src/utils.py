@@ -9,5 +9,5 @@ def strip_dunder(s: str) -> str:
 
 
 def is_uint(integer: int | Uint) -> TypeGuard[Uint]:
-    """Check if the given integer is a non-negative integer (including zero)."""
-    return isinstance(integer, int | Uint) and integer >= 0
+    """Check if the given integer is a non-negative integer"""
+    return isinstance(integer, int | Uint) and integer > 0
