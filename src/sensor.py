@@ -1,6 +1,14 @@
+import logging
 from abc import ABC, abstractmethod
 
 from car_park import CarPark
+from utils import strip_dunder
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
+logger = logging.getLogger(strip_dunder(__name__))
 
 
 class Sensor(ABC):

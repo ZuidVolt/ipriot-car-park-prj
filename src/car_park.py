@@ -1,14 +1,23 @@
+import logging
+
 from display import Display
 from sensor import Sensor
+from utils import strip_dunder
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
+logger = logging.getLogger(strip_dunder(__name__))
 
 
 class CarPark:
     def __init__(
         self,
-        location: str | None,
         capacity: int,
         plates: list[str] | None = None,
         displays: list[Display] | None = None,
+        location: str = "Unknown Location",
     ) -> None:
         self.location = location
         self.capacity = capacity
@@ -16,10 +25,23 @@ class CarPark:
         self.displays = displays or []
         self.sensors: list[Sensor] = []
 
+        if self.capacity <= 0:
+            msg = "Capacity must be a positive integer."
+            raise ValueError(msg)
+
     def __str__(self) -> str:
         return (
             f"Car park at {self.location} with a capacity of {self.capacity}"
         )
+
+    @property
+    def available_bays(self) -> int:
+        available_bays: int = max(0, self.capacity - len(self.plates))
+        if self.capacity - len(self.plates) < 0:
+            logger.warning(
+                "The number of cars exceeds the capacity of the car park."
+            )
+        return available_bays
 
     def register(self, component: Display | Sensor) -> None:
         if isinstance(component, Sensor):
@@ -31,10 +53,22 @@ class CarPark:
             raise TypeError(msg)
 
     def add_car(self, plate: str) -> None:
-        pass
+        self.plates.append(plate)
+        self.update_displays()
 
     def remove_car(self, plate: str) -> None:
-        pass
+        try:
+            self.plates.remove(plate)
+        except ValueError:
+            logger.warning(
+                f"Car with plate {plate} not found in the car park."
+            )
+        self.update_displays()
 
     def update_displays(self) -> None:
-        pass
+        data: dict[str, str | int] = {
+            "available_bays": self.available_bays,
+            "temperature": 25,
+        }
+        for display in self.displays:
+            display.update(data)
