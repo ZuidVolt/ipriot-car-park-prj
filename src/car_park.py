@@ -25,9 +25,12 @@ class CarPark:
         self.displays = displays or []
         self.sensors: list[Sensor] = []
 
-        if self.capacity <= 0:
+        if self.capacity < 0:
             msg = "Capacity must be a positive integer."
             raise ValueError(msg)
+        if not self.location:
+            logger.debug("Location is an empty string.")
+            self.location = "Unknown Location"
 
     def __str__(self) -> str:
         return (
