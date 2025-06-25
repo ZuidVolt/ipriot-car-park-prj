@@ -49,7 +49,7 @@ class CarPark:
     def register(self, component: Display | Sensor) -> None:
         if isinstance(component, Sensor):
             self.sensors.append(component)
-        elif isinstance(component, Display):
+        elif isinstance(component, Display):  # type: ignore[unreachable]
             self.displays.append(component)
         else:
             msg = f"argument component was not of type (Display | Sensor), got type: {component}"
