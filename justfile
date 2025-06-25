@@ -13,7 +13,8 @@ basedpyright-check:
 check: format ruff-check basedpyright-check
 
 test:
-    uv run python -m tests.test_car_park
+    uv run -m unittest tests.test_display
+    uv run -m unittest tests.test_car_park
 
 # Additional analysis checks (not Enforced)
 

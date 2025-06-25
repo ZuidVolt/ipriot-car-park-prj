@@ -10,32 +10,46 @@ logging.basicConfig(
 logger = logging.getLogger(strip_dunder(__name__))
 
 
-class DisplayData(TypedDict):
+class DisplayData(TypedDict, total=False):
+    message: str | None
     available_bays: int
     temperature: float
 
 
 class Display:
     def __init__(
-        self, display_id: int, message: str = "", *, is_on: bool = False
+        self,
+        display_id: int,
+        message: str = "",
+        logging_level: int = logging.INFO,
+        *,
+        is_on: bool = False,
     ) -> None:
         self.id = display_id
         self.message = message
         self.is_on = is_on
 
+        # Set the logging level for this instance
+        logger.setLevel(logging_level)
+
     def __str__(self) -> str:
         return f"Display {self.id}: {self.message}"
 
+    # im not sure if this is the best way (or correct way) to handle the update method,
+    # as it is both updating the message and logging the data (too many side effects and responsibilities?)
     def update(self, data: DisplayData) -> None:
+        if "message" in data and data["message"] is not None:
+            self.message = data["message"]
         for key, val in data.items():
             display_val = round(val, 1) if isinstance(val, float) else val
-            print(f"{key}: {display_val}")
+            logger.info(f"{key}: {display_val}")
 
 
 if __name__ == "__main__":
     display = Display(1, "Welcome to the Car Park", is_on=True)
     print(display)
     display.update({
+        "message": "Car Park Full",
         "available_bays": 10,
         "temperature": 22.55,
     })
