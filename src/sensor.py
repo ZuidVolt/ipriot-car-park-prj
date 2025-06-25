@@ -1,9 +1,14 @@
+from __future__ import annotations
+
 import logging
 import random
 from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
 
-from car_park import CarPark
-from utils import strip_dunder
+if TYPE_CHECKING:  # this is to avoid circular import in tests while still allowing static type checking
+    from car_park import CarPark
+
+from .utils import strip_dunder
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"

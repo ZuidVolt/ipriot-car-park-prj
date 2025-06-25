@@ -13,7 +13,7 @@ basedpyright-check:
 check: format ruff-check basedpyright-check
 
 test:
-    echo "Running tests..."
+    uv run python -m tests.test_car_park
 
 # Additional analysis checks (not Enforced)
 

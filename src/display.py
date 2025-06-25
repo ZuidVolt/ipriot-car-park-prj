@@ -1,7 +1,7 @@
 import logging
 from typing import TypedDict
 
-from utils import strip_dunder
+from .utils import strip_dunder
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"

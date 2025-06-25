@@ -1,8 +1,14 @@
-import logging
+from __future__ import annotations
 
-from display import Display, DisplayData
-from sensor import Sensor
-from utils import strip_dunder
+import logging
+from typing import TYPE_CHECKING
+
+from .sensor import Sensor
+from .utils import strip_dunder
+
+if TYPE_CHECKING:  # this is to avoid circular import in tests while still allowing static type checking
+    from display import Display, DisplayData  # noqa: TC004
+    from sensor import Sensor  # noqa: TC004
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -18,6 +24,7 @@ class CarPark:
         plates: list[str] | None = None,
         displays: list[Display] | None = None,
         location: str = "Unknown Location",
+        logging_level: int = logging.INFO,
     ) -> None:
         self.location = location
         self.capacity = capacity
@@ -25,11 +32,16 @@ class CarPark:
         self.displays = displays or []
         self.sensors: list[Sensor] = []
 
+        # Set the logging level for this instance
+        logger.setLevel(logging_level)
+
         if self.capacity < 0:
             msg = "Capacity must be a positive integer."
             raise ValueError(msg)
         if not self.location:
-            logger.debug("Location is an empty string.")
+            logger.debug(
+                "Location is an empty string (or possible the wrong type)."
+            )
             self.location = "Unknown Location"
 
     def __str__(self) -> str:
