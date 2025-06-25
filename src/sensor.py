@@ -19,16 +19,24 @@ logger = logging.getLogger(strip_dunder(__name__))
 
 class Sensor(ABC):
     def __init__(
-        self, senor_id: int, car_park: CarPark, *, is_active: bool
+        self,
+        sensor_id: int,
+        car_park: CarPark,
+        logging_level: int = logging.INFO,
+        *,
+        is_active: bool,
     ) -> None:
-        self.senor_id = senor_id
+        self.sensor_id = sensor_id
         self.car_park = car_park
         self.is_active = is_active
+
+        # Set the logging level for this instance
+        logger.setLevel(logging_level)
 
     def __str__(self) -> str:
         status: str = ""
         status = "is active" if self.is_active else "is not active"
-        return f"Display {self.senor_id}, Status: the senor {status}"
+        return f"Display {self.sensor_id}, Status: the sensor {status}"
 
     def _scan_plate(self) -> str:
         return "FAKE-" + format(random.randint(0, 999), "03d")

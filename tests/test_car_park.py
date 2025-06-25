@@ -54,6 +54,18 @@ class TestCarPark(unittest.TestCase):
         except AssertionError:
             pass
 
+    def test_register_raises_type_error(self) -> None:
+        cases: frozenset[str | int | float | bool | None] = frozenset({
+            "Not a Display or Sensor",
+            "123",
+            123,
+            None,
+            1.23,
+        })
+        for case in cases:
+            with self.assertRaises(TypeError):
+                self.car_park.register(case)  # type: ignore[call-arg]
+
 
 if __name__ == "__main__":
     unittest.main()

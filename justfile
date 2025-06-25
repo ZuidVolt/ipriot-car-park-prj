@@ -15,6 +15,7 @@ check: format ruff-check basedpyright-check
 test:
     uv run -m unittest tests.test_display
     uv run -m unittest tests.test_car_park
+    uv run -m unittest tests.test_sensor
 
 # Additional analysis checks (not Enforced)
 
