@@ -19,7 +19,7 @@ unsafe-fixes = true
 preview = true
 
 [tool.pyright]
-typeCheckingMode = "basic"
+typeCheckingMode = "strict"
 pythonVersion = "3.13"
 reportAny = false
 reportUnusedParameter = false

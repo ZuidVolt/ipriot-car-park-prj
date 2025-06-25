@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 from .sensor import Sensor
 from .utils import strip_dunder
 
-if TYPE_CHECKING:  # this is to avoid circular import in tests while still allowing static type checking
+if TYPE_CHECKING:  # this is to avoid circular import while still allowing static type checking
     from display import Display, DisplayData  # noqa: TC004
     from sensor import Sensor  # noqa: TC004
 

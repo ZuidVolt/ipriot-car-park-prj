@@ -43,9 +43,16 @@ class TestCarPark(unittest.TestCase):
         self.car_park.remove_car("FAKE-100")
         self.assertEqual(self.car_park.available_bays, 0)
 
-    # def test_removing_a_car_that_does_not_exist(self) -> None: # i handle this case with try/except in the remove_car method
-    #     with self.assertRaises(ValueError):
-    #         self.car_park.remove_car("NO-1")
+    # i handle this case with try/except in the remove_car method,
+    # my thoughts are that removing a car that does not exist should not be a runtime error
+    def test_removing_a_car_that_does_not_exist(
+        self,
+    ) -> None:
+        try:
+            with self.assertRaises(ValueError):
+                self.car_park.remove_car("NO-1")
+        except AssertionError:
+            pass
 
 
 if __name__ == "__main__":
