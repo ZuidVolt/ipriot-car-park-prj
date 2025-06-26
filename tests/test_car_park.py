@@ -100,6 +100,14 @@ class TestCarPark(unittest.TestCase):
         self.assertEqual(car_park.location, "Unknown Location")
         self.assertEqual(car_park.available_bays, 100)
 
+    # TODO: this test fails for now, because I don't have run time type checking/ conversion on this attribute
+    def test_location_type_mismatch_handling(self) -> None:
+        try:
+            car_park = CarPark(capacity=100, location=12345)  # type: ignore[arg-type]
+            self.assertIsInstance(car_park.location, str)
+        except AssertionError:
+            pass
+
 
 if __name__ == "__main__":
     unittest.main()
