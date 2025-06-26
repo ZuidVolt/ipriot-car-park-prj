@@ -29,6 +29,10 @@ class TestDisplay(unittest.TestCase):
         self.display.update({"message": "Goodbye"})
         self.assertEqual(self.display.message, "Goodbye")
 
+    def test_display_str(self) -> None:
+        expected_str = "Display 1: Welcome to the car park"
+        self.assertEqual(str(self.display), expected_str)
+
 
 if __name__ == "__main__":
     unittest.main()
