@@ -1,8 +1,11 @@
 import logging
 import unittest
+from pathlib import Path
 
 from src.car_park import CarPark
 from src.display import Display
+
+LOG_PATH = Path("test-display-log")
 
 
 class TestDisplay(unittest.TestCase):
@@ -17,6 +20,7 @@ class TestDisplay(unittest.TestCase):
             capacity=100,
             location="123 Example Street",
             logging_level=logging.ERROR,
+            log_file=LOG_PATH,
         )
 
     def test_display_initialized_with_all_attributes(self) -> None:
@@ -32,6 +36,9 @@ class TestDisplay(unittest.TestCase):
     def test_display_str(self) -> None:
         expected_str = "Display 1: Welcome to the car park"
         self.assertEqual(str(self.display), expected_str)
+
+    def tearDown(self) -> None:
+        LOG_PATH.unlink(missing_ok=True)
 
 
 if __name__ == "__main__":

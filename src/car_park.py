@@ -1,4 +1,6 @@
 import logging
+from datetime import datetime
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from .display import Display
@@ -16,12 +18,13 @@ logger = logging.getLogger(strip_dunder(__name__))
 
 
 class CarPark:
-    def __init__(
+    def __init__(  # noqa: PLR0917
         self,
         capacity: int,
         plates: list[str] | None = None,
         displays: list[Display] | None = None,
         location: str = "Unknown Location",
+        log_file: str | Path = Path("log.txt"),
         logging_level: int = logging.INFO,
     ) -> None:
         self.location = location
@@ -29,6 +32,10 @@ class CarPark:
         self.plates = plates or []
         self.displays = displays or []
         self.sensors: list[Sensor] = []
+        self.log_file: Path = (
+            log_file if isinstance(log_file, Path) else Path(log_file)
+        )
+        self.log_file.touch(exist_ok=True)
 
         # Set the logging level for this instance
         logger.setLevel(logging_level)
@@ -46,6 +53,12 @@ class CarPark:
         return (
             f"Car park at {self.location} with a capacity of {self.capacity}"
         )
+
+    def _log_car_activity(self, plate: str, action: str) -> None:
+        with self.log_file.open("a") as f:
+            f.write(
+                f"{plate} {action} at {datetime.now():%Y-%m-%d %H:%M:%S}\n"  # noqa: DTZ005
+            )
 
     @property
     def available_bays(self) -> int:
@@ -68,6 +81,7 @@ class CarPark:
     def add_car(self, plate: str) -> None:
         self.plates.append(plate)
         self.update_displays()
+        self._log_car_activity(plate, "entered")
 
     def remove_car(self, plate: str) -> None:
         try:
@@ -77,6 +91,7 @@ class CarPark:
                 f"Car with plate {plate} not found in the car park."
             )
         self.update_displays()
+        self._log_car_activity(plate, "exited")
 
     def update_displays(self) -> None:
         data: DisplayData = {

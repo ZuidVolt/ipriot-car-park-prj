@@ -1,8 +1,11 @@
 import logging
 import unittest
+from pathlib import Path
 
 from src.car_park import CarPark
 from src.sensor import EntrySensor, ExitSensor, Sensor
+
+LOG_PATH = Path("test-senor-log")
 
 
 class TestSensor(unittest.TestCase):
@@ -11,6 +14,7 @@ class TestSensor(unittest.TestCase):
             capacity=100,
             location="123 Example Street",
             logging_level=logging.ERROR,
+            log_file=LOG_PATH,
         )
         self.entry_sensor = EntrySensor(
             sensor_id=1,
@@ -60,6 +64,9 @@ class TestSensor(unittest.TestCase):
     def test_sensor_str(self) -> None:
         self.assertIn("is active", str(self.entry_sensor))
         self.assertIn("is active", str(self.exit_sensor))
+
+    def tearDown(self) -> None:
+        LOG_PATH.unlink(missing_ok=True)
 
 
 if __name__ == "__main__":
