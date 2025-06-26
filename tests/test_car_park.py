@@ -76,13 +76,16 @@ class TestCarPark(unittest.TestCase):
         self.assertIn(entry_sensor, self.car_park.sensors)
 
     def test_register_raises_type_error(self) -> None:
-        cases: frozenset[str | int | float | bool | None] = frozenset({
-            "Not a Display or Sensor",
-            "123",
-            123,
-            None,
-            1.23,
-        })
+        cases: frozenset[str | int | float | bool | type[Display] | None] = (
+            frozenset({
+                "Not a Display or Sensor",
+                "123",
+                123,
+                None,
+                1.23,
+                Display,
+            })
+        )
         for case in cases:
             with self.assertRaises(TypeError):
                 self.car_park.register(case)  # type: ignore[call-arg]
