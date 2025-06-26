@@ -57,6 +57,10 @@ class TestSensor(unittest.TestCase):
         self.exit_sensor.update_car_park(plate)
         self.assertNotIn(plate, self.car_park.plates)
 
+    def test_sensor_str(self) -> None:
+        self.assertIn("is active", str(self.entry_sensor))
+        self.assertIn("is active", str(self.exit_sensor))
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,7 +1,7 @@
 [project]
 name = "ipriot-car-park-prj"
 version = "0.1.0"
-description = ""
+description = "OOP Simulation of an automated car park system using Python"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = []
@@ -10,7 +10,7 @@ dependencies = []
 dev = ["ruff", "radon", "vulture", "coverage"]
 
 [project.license]
-text = "Apache License"
+text = "MIT License"
 
 [tool.ruff]
 line-length = 79

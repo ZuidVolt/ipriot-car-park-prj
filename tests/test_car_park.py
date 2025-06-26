@@ -66,6 +66,10 @@ class TestCarPark(unittest.TestCase):
             with self.assertRaises(TypeError):
                 self.car_park.register(case)  # type: ignore[call-arg]
 
+    def test_car_park_str(self) -> None:
+        expected_str = "Car park at 123 Example Street with a capacity of 100"
+        self.assertEqual(str(self.car_park), expected_str)
+
 
 if __name__ == "__main__":
     unittest.main()
