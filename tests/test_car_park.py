@@ -2,6 +2,8 @@ import logging
 import unittest
 
 from src.car_park import CarPark
+from src.display import Display
+from src.sensor import EntrySensor
 
 
 class TestCarPark(unittest.TestCase):
@@ -69,6 +71,37 @@ class TestCarPark(unittest.TestCase):
     def test_car_park_str(self) -> None:
         expected_str = "Car park at 123 Example Street with a capacity of 100"
         self.assertEqual(str(self.car_park), expected_str)
+
+    def test_capacity_negative(self) -> None:
+        with self.assertRaises(ValueError):
+            CarPark(capacity=-1, location="Invalid Location")
+
+    def test_location_empty_string(self) -> None:
+        car_park = CarPark(capacity=100, location="")
+        self.assertEqual(car_park.location, "Unknown Location")
+        self.assertEqual(car_park.available_bays, 100)
+
+    def test_register(self) -> None:
+        display = Display(
+            display_id=1,
+            message="Welcome to the car park",
+            is_on=True,
+            logging_level=logging.ERROR,
+        )
+        entry_sensor = EntrySensor(
+            sensor_id=1,
+            car_park=self.car_park,
+            is_active=True,
+            logging_level=logging.ERROR,
+        )
+        self.car_park.register(display)
+        self.assertIn(display, self.car_park.displays)
+
+        self.car_park.register(entry_sensor)
+        self.assertIn(entry_sensor, self.car_park.sensors)
+
+        with self.assertRaises(TypeError):
+            self.car_park.register("Not a Display or Sensor")  # type: ignore[call-arg]
 
 
 if __name__ == "__main__":
