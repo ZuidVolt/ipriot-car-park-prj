@@ -56,6 +56,25 @@ class TestCarPark(unittest.TestCase):
         except AssertionError:
             pass
 
+    def test_register_valid_input_type(self) -> None:
+        display = Display(
+            display_id=1,
+            message="Welcome to the car park",
+            is_on=True,
+            logging_level=logging.ERROR,
+        )
+        entry_sensor = EntrySensor(
+            sensor_id=1,
+            car_park=self.car_park,
+            is_active=True,
+            logging_level=logging.ERROR,
+        )
+        self.car_park.register(display)
+        self.assertIn(display, self.car_park.displays)
+
+        self.car_park.register(entry_sensor)
+        self.assertIn(entry_sensor, self.car_park.sensors)
+
     def test_register_raises_type_error(self) -> None:
         cases: frozenset[str | int | float | bool | None] = frozenset({
             "Not a Display or Sensor",
@@ -80,28 +99,6 @@ class TestCarPark(unittest.TestCase):
         car_park = CarPark(capacity=100, location="")
         self.assertEqual(car_park.location, "Unknown Location")
         self.assertEqual(car_park.available_bays, 100)
-
-    def test_register(self) -> None:
-        display = Display(
-            display_id=1,
-            message="Welcome to the car park",
-            is_on=True,
-            logging_level=logging.ERROR,
-        )
-        entry_sensor = EntrySensor(
-            sensor_id=1,
-            car_park=self.car_park,
-            is_active=True,
-            logging_level=logging.ERROR,
-        )
-        self.car_park.register(display)
-        self.assertIn(display, self.car_park.displays)
-
-        self.car_park.register(entry_sensor)
-        self.assertIn(entry_sensor, self.car_park.sensors)
-
-        with self.assertRaises(TypeError):
-            self.car_park.register("Not a Display or Sensor")  # type: ignore[call-arg]
 
 
 if __name__ == "__main__":
