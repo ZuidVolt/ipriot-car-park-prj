@@ -27,7 +27,7 @@ class CarPark:
         log_file: str | Path = Path("log.txt"),
         logging_level: int = logging.INFO,
     ) -> None:
-        self.location = location
+        self.location = str(location)
         self.capacity = capacity
         self.plates = plates or []
         self.displays = displays or []
