@@ -14,6 +14,9 @@ env/
 .vscode/
 .idea/
 .ropeproject/
+# coverage reports
+.coverage
+htmlcov/
 # Miscellaneous
 .DS_Store
 *.log

@@ -13,9 +13,13 @@ basedpyright-check:
 check: format ruff-check basedpyright-check
 
 test:
-    uv run -m unittest tests.test_display
-    uv run -m unittest tests.test_car_park
-    uv run -m unittest tests.test_sensor
+    uv run python -m unittest discover
+
+test-coverage:
+    uv run coverage run -m unittest discover
+    uv run coverage report -m
+    uv run coverage html
+
 
 # Additional analysis checks (not Enforced)
 

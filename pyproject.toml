@@ -7,7 +7,7 @@ requires-python = ">=3.13"
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["ruff", "radon", "vulture"]
+dev = ["ruff", "radon", "vulture", "coverage"]
 
 [project.license]
 text = "Apache License"
@@ -21,8 +21,8 @@ preview = true
 [tool.pyright]
 typeCheckingMode = "strict"
 pythonVersion = "3.13"
-reportAny = false
-reportUnusedParameter = false
+# reportAny = false
+# reportUnusedParameter = false
 reportUnreachable = false
 
 [tool.radon]
