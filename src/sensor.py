@@ -5,7 +5,7 @@ import random
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:  # this is to avoid circular import while still allowing static type checking
+if TYPE_CHECKING:  # makes CarPark only a static type for type checking
     from car_park import CarPark
 
 from .utils import strip_dunder

@@ -3,6 +3,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from .config import CarParkConfig, Config
 from .display import Display
 from .sensor import Sensor
 from .utils import strip_dunder
@@ -18,17 +19,19 @@ logger = logging.getLogger(strip_dunder(__name__))
 
 
 class CarPark:
-    def __init__(  # noqa: PLR0917
+    def __init__(
         self,
         capacity: int,
         plates: list[str] | None = None,
         displays: list[Display] | None = None,
         location: str = "Unknown Location",
+        *,
         log_file: str | Path = Path("log.txt"),
+        config: Config | None = None,
         logging_level: int = logging.INFO,
     ) -> None:
         self.location = str(location)
-        self.capacity = capacity
+        self.capacity = int(capacity)
         self.plates = plates or []
         self.displays = displays or []
         self.sensors: list[Sensor] = []
@@ -36,6 +39,7 @@ class CarPark:
             log_file if isinstance(log_file, Path) else Path(log_file)
         )
         self.log_file.touch(exist_ok=True)
+        self.config = config or Config()
 
         # Set the logging level for this instance
         logger.setLevel(logging_level)
@@ -100,6 +104,32 @@ class CarPark:
         }
         for display in self.displays:
             display.update(data)
+
+    def write_config(self) -> None:
+        config_data: CarParkConfig = {
+            "location": self.location,
+            "capacity": self.capacity,
+            "log_file": str(self.log_file),
+        }
+        self.config.write(config_data)
+
+    @classmethod
+    def from_config(cls, config_file: Path = Path("config.json")) -> "CarPark":
+        # not completely happy with this as i would like somehow pass the self.config attribute
+        # instead of creating a new instance of Config
+        config: Config = Config(file_path=config_file)
+        try:
+            config_data: CarParkConfig = config.read()
+        except ValueError:
+            logger.error("Failed to read configuration")
+            raise
+
+        return cls(
+            capacity=config_data["capacity"],
+            location=config_data["location"],
+            log_file=config_data["log_file"],
+            config=config,
+        )
 
 
 if __name__ == "__main__":
