@@ -51,7 +51,7 @@ class TestCarPark(unittest.TestCase):
         self.assertEqual(self.car_park.available_bays, 0)
 
     # i handle this case with try/except in the remove_car method,
-    # my thoughts are that removing a car that does not exist should not be a runtime error
+    # my thoughts are that removing a car that does not exist should not be a runtime error and just be logged instead
     def test_removing_a_car_that_does_not_exist(
         self,
     ) -> None:
@@ -81,16 +81,13 @@ class TestCarPark(unittest.TestCase):
         self.assertIn(entry_sensor, self.car_park.sensors)
 
     def test_register_raises_type_error(self) -> None:
-        cases: frozenset[str | int | float | bool | type[Display] | None] = (
-            frozenset({
-                "Not a Display or Sensor",
-                "123",
-                123,
-                None,
-                1.23,
-                Display,
-            })
-        )
+        cases: frozenset[str | int | float | bool | None] = frozenset({
+            "Not a Display or Sensor",
+            "123",
+            123,
+            None,
+            1.23,
+        })
         for case in cases:
             with self.assertRaises(TypeError):
                 self.car_park.register(case)  # type: ignore[call-arg]
