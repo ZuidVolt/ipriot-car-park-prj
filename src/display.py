@@ -73,7 +73,7 @@ class Display:
         logger.info("----------------------------")
 
     def update_and_display(
-        self, data: DisplayData, *, is_display_on: bool
+        self, data: DisplayData, *, is_display_on: bool | None = None
     ) -> None:
         """Update the display with new data and then display it."""
         self.update(data)
