@@ -3,10 +3,12 @@ import unittest
 from pathlib import Path
 
 from src.car_park import CarPark
+from src.config import Config
 from src.display import Display
 from src.sensor import EntrySensor
 
 LOG_PATH = Path("test_log.txt")
+CONFIG_PATH = Path("test-carpark-config.json")
 
 
 class TestCarPark(unittest.TestCase):
@@ -16,6 +18,7 @@ class TestCarPark(unittest.TestCase):
             location="123 Example Street",
             logging_level=logging.ERROR,
             log_file=LOG_PATH,
+            config=Config(file_path=CONFIG_PATH),
         )
 
     def test_car_park_initialized_with_all_attributes(self) -> None:
@@ -111,12 +114,28 @@ class TestCarPark(unittest.TestCase):
         car_park = CarPark(capacity=100, location=12345, log_file=LOG_PATH)  # type: ignore[arg-type]
         self.assertIsInstance(car_park.location, str)
 
+    def test_write_config(self) -> None:
+        self.car_park.write_config()
+        with CONFIG_PATH.open("r") as f:
+            data = f.read()
+            self.assertIn("123 Example Street", data)
+            self.assertIn("100", data)
+            self.assertIn(str(LOG_PATH), data)
+
+    def test_from_config(self) -> None:
+        self.car_park.write_config()
+        car_park_obj = self.car_park.from_config(config_file=CONFIG_PATH)
+        self.assertEqual(car_park_obj.capacity, 100)
+        self.assertEqual(car_park_obj.location, "123 Example Street")
+        self.assertEqual(car_park_obj.log_file, LOG_PATH)
+
     def test_log_file_created(self) -> None:
         new_carpark = CarPark(
             location="123 Example Street",
             capacity=100,
             log_file=LOG_PATH,
         )
+        # i don't know if updating this is within the scope of the func or the entire class
         self.car_park = new_carpark
         self.assertTrue(LOG_PATH.exists())
 
@@ -151,6 +170,7 @@ class TestCarPark(unittest.TestCase):
 
     def tearDown(self) -> None:
         LOG_PATH.unlink(missing_ok=True)
+        CONFIG_PATH.unlink(missing_ok=True)
 
 
 if __name__ == "__main__":
