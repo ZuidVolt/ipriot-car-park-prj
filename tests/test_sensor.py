@@ -42,7 +42,6 @@ class TestSensor(unittest.TestCase):
         self.assertEqual(len(self.car_park.plates), initial_count + 1)
 
         # ExitSensor should remove a car from the car park
-        # First, ensure there is at least one car to remove
         self.entry_sensor.detect_vehicle()
         plates_before_exit = self.car_park.plates.copy()
         self.exit_sensor.detect_vehicle()
