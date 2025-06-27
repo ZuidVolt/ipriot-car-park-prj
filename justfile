@@ -1,16 +1,8 @@
-# main check (Enforced before commit)
-
-format:
-    ruff format --preview .
-
-ruff-check:
-    ruff check --fix --unsafe-fixes .
 
 
-basedpyright-check:
-    basedpyright .
+run:
+    uv run python -m src.main
 
-check: format ruff-check basedpyright-check
 
 test:
     uv run python -m unittest discover
@@ -20,6 +12,18 @@ test-coverage:
     uv run coverage report -m
     uv run coverage html
 
+# main check (Enforced before commit)
+
+format:
+    ruff format --preview .
+
+ruff-check:
+    ruff check --fix --unsafe-fixes .
+
+basedpyright-check:
+    basedpyright .
+
+check: format ruff-check basedpyright-check
 
 # Additional analysis checks (not Enforced)
 
