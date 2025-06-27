@@ -20,3 +20,6 @@ htmlcov/
 # Miscellaneous
 .DS_Store
 *.log
+dev-notes.md
+moondalup.txt
+moondalup_config.json
