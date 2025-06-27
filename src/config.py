@@ -16,6 +16,7 @@ class Config:
         )
 
     def write(self, config_data: CarParkConfig) -> None:
+        """Writes the car park configuration to a JSON file."""
         with self.file_path.open("w") as f:
             json.dump(
                 {
@@ -27,6 +28,7 @@ class Config:
             )
 
     def read(self) -> CarParkConfig:
+        """Reads the car park configuration from a JSON file."""
         with self.file_path.open() as f:
             config = json.load(f)
         if not config:
