@@ -34,7 +34,7 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(config_data["log_file"], str(LOG_PATH))
 
     def test_read_empty_config_file(self) -> None:
-        CONFIG_PATH.write_text("")  # writes over the file to make it empty
+        CONFIG_PATH.write_text("")
         with self.assertRaises(ValueError):
             self.config.read()
 
