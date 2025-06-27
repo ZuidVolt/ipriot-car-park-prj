@@ -1,4 +1,5 @@
 import logging
+import random
 from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -66,6 +67,7 @@ class CarPark:
 
     @property
     def available_bays(self) -> int:
+        """Calculate the number of available bays in the car park."""
         available_bays: int = max(0, self.capacity - len(self.plates))
         if self.capacity - len(self.plates) < 0:
             logger.warning(
@@ -74,6 +76,7 @@ class CarPark:
         return available_bays
 
     def register(self, component: Display | Sensor) -> None:
+        """Register a Display or Sensor component to the car park."""
         if isinstance(component, Sensor):
             self.sensors.append(component)
         elif isinstance(component, Display):  # type: ignore[unreachable]
@@ -83,29 +86,57 @@ class CarPark:
             raise TypeError(msg)
 
     def add_car(self, plate: str) -> None:
+        """Add a car to the car park by its plate number."""
         self.plates.append(plate)
-        self.update_displays()
+        self.update_displays(event_type="entered")
         self._log_car_activity(plate, "entered")
 
     def remove_car(self, plate: str) -> None:
+        """Remove a car from the car park by its plate number."""
         try:
             self.plates.remove(plate)
         except ValueError:
             logger.warning(
                 f"Car with plate {plate} not found in the car park."
             )
-        self.update_displays()
+        self.update_displays(event_type="exited")
         self._log_car_activity(plate, "exited")
 
-    def update_displays(self) -> None:
+    @staticmethod
+    def _get_rand_temp() -> float:
+        return round(random.uniform(15.0, 30.0), 1)
+
+    def update_displays(
+        self,
+        event_type: str,
+    ) -> None:
+        """Update the displays with the current state of the car park.
+        event_type: str, can be "entered", "exited", or any other string
+        """
+        display_message: str
+
+        match event_type:
+            case _ if self.available_bays == 0:
+                display_message = "Car Park Full!"
+            case "exited":
+                display_message = (
+                    f"Thank you for staying at {self.location} Car Park"
+                )
+            case "entered":
+                display_message = f"Welcome to {self.location} Car Park"
+            case _:
+                display_message = f"Welcome to {self.location} Car Park"  # could be a custom message instead
+
         data: DisplayData = {
             "available_bays": self.available_bays,
-            "temperature": 25,
+            "temperature": self._get_rand_temp(),
+            "message": display_message,
         }
         for display in self.displays:
-            display.update(data)
+            display.update_and_display(data, is_display_on=True)
 
     def write_config(self) -> None:
+        """Write the current configuration of the car park to a config file."""
         config_data: CarParkConfig = {
             "location": self.location,
             "capacity": self.capacity,
@@ -115,6 +146,7 @@ class CarPark:
 
     @classmethod
     def from_config(cls, config_file: Path = Path("config.json")) -> "CarPark":
+        """Create a CarPark instance from a configuration file."""
         # not completely happy with this as i would like somehow pass the self.config attribute
         # instead of creating a new instance of Config
         config: Config = Config(file_path=config_file)
