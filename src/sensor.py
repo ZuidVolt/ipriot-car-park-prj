@@ -43,15 +43,17 @@ class Sensor(ABC):
 
     @abstractmethod
     def update_car_park(self, plate: str) -> None:
-        pass
+        """Update the car park with the detected vehicle's plate."""
 
     def detect_vehicle(self) -> None:
+        """Detect a vehicle and update the car park."""
         plate = self._scan_plate()
         self.update_car_park(plate)
 
 
 class EntrySensor(Sensor):
     def update_car_park(self, plate: str) -> None:
+        """Update the car park with the detected vehicle's plate."""
         self.car_park.add_car(plate)
         logger.info(f"Incoming 🚘 vehicle detected. Plate: {plate}")
 
@@ -61,5 +63,6 @@ class ExitSensor(Sensor):
         return random.choice(self.car_park.plates)
 
     def update_car_park(self, plate: str) -> None:
+        """Update the car park by removing the vehicle's plate."""
         self.car_park.remove_car(plate)
         logger.info(f"Outgoing 🚗 vehicle detected. Plate: {plate}")
