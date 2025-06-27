@@ -33,6 +33,10 @@ class TestDisplay(unittest.TestCase):
         self.display.update({"message": "Goodbye"})
         self.assertEqual(self.display.message, "Goodbye")
 
+    def test_update_invalid_key(self) -> None:
+        with self.assertRaises(ValueError):
+            self.display.update({"invalid_key": "This should raise an error"})  # type: ignore[arg-type]
+
     def test_display_str(self) -> None:
         expected_str = "Display 1: Welcome to the car park"
         self.assertEqual(str(self.display), expected_str)
